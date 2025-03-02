@@ -1,0 +1,46 @@
+[gd_scene load_steps=5 format=3 uid="uid://dj7641avt48sx"]
+
+[ext_resource type="Script" path="res://mines_grid.gd" id="1_q834l"]
+[ext_resource type="Texture2D" uid="uid://dtfnelqmisq4x" path="res://assets/minesweeper_tiles.png" id="2_nksv2"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0m7hj"]
+texture = ExtResource("2_nksv2")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+4:1/0 = 0
+4:1/0/custom_data_0 = true
+0:2/0 = 0
+1:2/0 = 0
+1:2/0/custom_data_0 = true
+2:2/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_a8ugx"]
+tile_size = Vector2i(32, 32)
+custom_data_layer_0/name = "has_mine"
+custom_data_layer_0/type = 1
+sources/0 = SubResource("TileSetAtlasSource_0m7hj")
+
+[node name="MineGrid" type="Node2D"]
+self_modulate = Color(0.223529, 0.192157, 0.294118, 1)
+script = ExtResource("1_q834l")
+
+[node name="MineLayer" type="TileMapLayer" parent="."]
+unique_name_in_owner = true
+tile_set = SubResource("TileSet_a8ugx")
+
+[node name="DefaultLayer" type="TileMapLayer" parent="."]
+unique_name_in_owner = true
+tile_set = SubResource("TileSet_a8ugx")
+
+[node name="Timer" type="Timer" parent="."]
+unique_name_in_owner = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

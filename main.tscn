@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://bmhhvapbcvp83"]
+
+[ext_resource type="PackedScene" uid="uid://dj7641avt48sx" path="res://mines_grid.tscn" id="1_f10nx"]
+[ext_resource type="PackedScene" uid="uid://etfftboqbdub" path="res://ui.tscn" id="2_4h27c"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hf6cd"]
+bg_color = Color(0.223529, 0.192157, 0.294118, 1)
+
+[node name="Main" type="Node"]
+
+[node name="Game" type="Node2D" parent="."]
+
+[node name="Panel" type="Panel" parent="Game"]
+custom_minimum_size = Vector2(1280, 720)
+offset_right = 640.0
+offset_bottom = 360.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_hf6cd")
+
+[node name="MinesGrid" parent="Game" instance=ExtResource("1_f10nx")]
+position = Vector2(16, 0)
+
+[node name="Camera2D" type="Camera2D" parent="Game"]
+anchor_mode = 0
+
+[node name="UI" parent="." node_paths=PackedStringArray("game") instance=ExtResource("2_4h27c")]
+game = NodePath("../Game/MinesGrid")

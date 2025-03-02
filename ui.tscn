@@ -1,0 +1,99 @@
+[gd_scene load_steps=8 format=3 uid="uid://etfftboqbdub"]
+
+[ext_resource type="Texture2D" uid="uid://bviavsws2uaxu" path="res://assets/button_default.png" id="1_86rhh"]
+[ext_resource type="Script" path="res://ui.gd" id="1_bo8mo"]
+[ext_resource type="Texture2D" uid="uid://bys5qw8rmp22f" path="res://assets/button_default_pressed.png" id="2_fcuxb"]
+[ext_resource type="Texture2D" uid="uid://bmgvyvw5lb12q" path="res://assets/button_disgusted.png" id="4_ttmdh"]
+[ext_resource type="Texture2D" uid="uid://cefhjenmj7yy6" path="res://assets/button_disgusted_pressed.png" id="5_k6qee"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xjy4p"]
+bg_color = Color(0.223529, 0.192157, 0.294118, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ql4e8"]
+bg_color = Color(0.223529, 0.192157, 0.294118, 1)
+
+[node name="UI" type="CanvasLayer"]
+script = ExtResource("1_bo8mo")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(0, 80)
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+size_flags_horizontal = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_xjy4p")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 20
+
+[node name="MinesLeft" type="Panel" parent="PanelContainer/HBoxContainer"]
+custom_minimum_size = Vector2(50, 30)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_ql4e8")
+
+[node name="MinesLabel" type="Label" parent="PanelContainer/HBoxContainer/MinesLeft"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.0
+offset_top = -15.0
+offset_right = 25.0
+offset_bottom = 15.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+text = "100"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="GameButton" type="TextureButton" parent="PanelContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture_normal = ExtResource("1_86rhh")
+texture_pressed = ExtResource("2_fcuxb")
+
+[node name="GameLostButton" type="TextureButton" parent="PanelContainer/HBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture_normal = ExtResource("4_ttmdh")
+texture_pressed = ExtResource("5_k6qee")
+
+[node name="Timer" type="Panel" parent="PanelContainer/HBoxContainer"]
+custom_minimum_size = Vector2(50, 30)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ql4e8")
+
+[node name="TimerLabel" type="Label" parent="PanelContainer/HBoxContainer/Timer"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.0
+offset_top = -15.0
+offset_right = 25.0
+offset_bottom = 15.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+text = "100"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="pressed" from="PanelContainer/HBoxContainer/GameButton" to="." method="_on_game_button_pressed"]
+[connection signal="pressed" from="PanelContainer/HBoxContainer/GameLostButton" to="." method="_on_game_button_pressed"]
