@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=3 uid="uid://etfftboqbdub"]
 
 [ext_resource type="Texture2D" uid="uid://bviavsws2uaxu" path="res://assets/button_default.png" id="1_86rhh"]
-[ext_resource type="Script" path="res://ui.gd" id="1_bo8mo"]
+[ext_resource type="Script" uid="uid://cjkqg7yflwcit" path="res://ui.gd" id="1_bo8mo"]
 [ext_resource type="Texture2D" uid="uid://bys5qw8rmp22f" path="res://assets/button_default_pressed.png" id="2_fcuxb"]
 [ext_resource type="Texture2D" uid="uid://bmgvyvw5lb12q" path="res://assets/button_disgusted.png" id="4_ttmdh"]
 [ext_resource type="Texture2D" uid="uid://cefhjenmj7yy6" path="res://assets/button_disgusted_pressed.png" id="5_k6qee"]

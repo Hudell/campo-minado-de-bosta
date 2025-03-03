@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://dj7641avt48sx"]
 
-[ext_resource type="Script" path="res://mines_grid.gd" id="1_q834l"]
+[ext_resource type="Script" uid="uid://dfqa2xorov2mt" path="res://mines_grid.gd" id="1_q834l"]
 [ext_resource type="Texture2D" uid="uid://dtfnelqmisq4x" path="res://assets/minesweeper_tiles.png" id="2_nksv2"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0m7hj"]
