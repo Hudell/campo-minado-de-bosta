@@ -17,7 +17,7 @@ offset_bottom = 360.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_hf6cd")
 
 [node name="MinesGrid" parent="Game" instance=ExtResource("1_f10nx")]
-position = Vector2(16, 0)
+position = Vector2(0, -16)
 
 [node name="Camera2D" type="Camera2D" parent="Game"]
 anchor_mode = 0

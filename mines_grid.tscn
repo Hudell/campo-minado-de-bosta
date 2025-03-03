@@ -21,6 +21,7 @@ texture_region_size = Vector2i(32, 32)
 1:2/0 = 0
 1:2/0/custom_data_0 = true
 2:2/0 = 0
+3:2/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_a8ugx"]
 tile_size = Vector2i(32, 32)
@@ -37,6 +38,10 @@ unique_name_in_owner = true
 tile_set = SubResource("TileSet_a8ugx")
 
 [node name="DefaultLayer" type="TileMapLayer" parent="."]
+unique_name_in_owner = true
+tile_set = SubResource("TileSet_a8ugx")
+
+[node name="HighlightLayer" type="TileMapLayer" parent="."]
 unique_name_in_owner = true
 tile_set = SubResource("TileSet_a8ugx")
 

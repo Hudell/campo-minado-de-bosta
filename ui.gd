@@ -47,7 +47,9 @@ func on_game_state_changed():
 
 func _on_game_button_pressed() -> void:
 	if game != null:
-		game.restart()
+		game.paused = true
+		
+		$AcceptDialog.popup()
 
 func update_mines_left():
 	%MinesLabel.text = str(get_mines_left())
@@ -60,3 +62,26 @@ func update_button():
 
 	%GameButton.visible = not lost
 	%GameLostButton.visible = lost
+
+
+func _on_accept_dialog_confirmed() -> void:
+	if game != null:
+		game.paused = false
+		
+		if %Beginner.button_pressed:
+			game.change_difficulty(10, 10, 20)
+			return
+		if %Easy.button_pressed:
+			game.change_difficulty(20, 20, 70)
+			return
+		if %Normal.button_pressed:
+			game.change_difficulty(40, 20, 130)
+			return
+		if %Hard.button_pressed:
+			game.change_difficulty(40, 20, 200)
+			return
+			
+
+func _on_accept_dialog_canceled() -> void:
+	if game != null:
+		game.paused = false

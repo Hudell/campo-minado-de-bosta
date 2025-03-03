@@ -1,8 +1,8 @@
 extends Node2D
 class_name MinesGrid
 
-@export var columns := 39
-@export var rows := 19
+@export var columns := 40
+@export var rows := 20
 @export var number_of_mines := 130
 
 signal flag_changed
@@ -24,23 +24,62 @@ const CELLS = {
 	"FLAG": Vector2i(0, 2),
 	"MINE": Vector2i(1, 2),
 	"DEFAULT": Vector2i(2, 2),
+	"HIGHLIGHT": Vector2i(3, 2),
 }
 
 var started = false
 var time_elapsed = 0
 var game_finished = false
 var game_lost = false
+var clicked_cell: Vector2i
+var is_clicked := false
+var clicked_mouse_button: MouseButton
+var paused = false
 
 func _ready() -> void:
 	clear_board()
 
 func _input(event: InputEvent) -> void:
-	if not event is InputEventMouseButton or not event.is_pressed():
+	if paused:
+		clear_click_data()
+		return
+
+	var is_click = event is InputEventMouseButton
+	var is_move = event is InputEventMouseMotion
+	
+	if not is_click and not is_move:
 		return
 
 	var local_event = %DefaultLayer.make_input_local(event)
-	var clicked_cell = %DefaultLayer.local_to_map(local_event.position)
-	click_cell(clicked_cell, event.button_index)
+	var cell = %DefaultLayer.local_to_map(local_event.position)
+
+	if is_click:
+		mouse_click_event(event, cell)
+	else:
+		mouse_move_event(event, cell)
+	
+func mouse_click_event(event: InputEventMouseButton, cell: Vector2i):
+	if event.is_pressed():
+		preview_click_cell(cell, event.button_index)
+		return
+	
+	click_cell(cell, event.button_index)
+	clear_click_data()
+
+func mouse_move_event(_event: InputEventMouseMotion, cell: Vector2i):
+	if not is_clicked:
+		return
+	if clicked_cell == null or not is_valid_pos(clicked_cell):
+		return
+	
+	if clicked_cell != cell:
+		clear_click_data()
+
+func change_difficulty(new_columns: int, new_rows: int, new_mines: int):
+	columns = new_columns
+	rows = new_rows
+	number_of_mines = new_mines
+	restart()
 
 func restart():
 	clear_board()
@@ -57,8 +96,30 @@ func min_row() -> int:
 func max_row() -> int:
 	return rows + 2
 
-func click_cell(cell: Vector2i, mouse_button: MouseButton):
+func preview_click_cell(cell: Vector2i, mouse_button: MouseButton):
+	clear_highlights()
 	if not is_valid_pos(cell):
+		return
+	
+	is_clicked = true
+	clicked_cell = cell
+	clicked_mouse_button = mouse_button
+	
+	if mouse_button == MOUSE_BUTTON_RIGHT:
+		preview_right_click(cell)
+		return
+	
+	if mouse_button == MOUSE_BUTTON_LEFT:
+		preview_left_click(cell)
+		return
+
+func clear_click_data():
+	is_clicked = false
+	clear_highlights()
+
+func click_cell(cell: Vector2i, mouse_button: MouseButton):
+	if not is_valid_pos(cell) or not is_clicked or clicked_mouse_button != mouse_button:
+		clear_click_data()
 		return
 
 	if mouse_button == MOUSE_BUTTON_RIGHT:
@@ -69,6 +130,22 @@ func click_cell(cell: Vector2i, mouse_button: MouseButton):
 		left_click(cell)
 		return
 
+func preview_left_click(pos: Vector2i):
+	if game_lost or game_finished:
+		return
+	
+	if not started:
+		return
+	
+	if is_flagged(pos):
+		return
+		
+	if is_hidden(pos):
+		highlight_cells([pos])
+		return
+	
+	highlight_unflagged_cells_around(pos)
+
 func left_click(pos: Vector2i):
 	if game_lost or game_finished:
 		return
@@ -76,6 +153,9 @@ func left_click(pos: Vector2i):
 	if not started:
 		build_board(pos)
 		started = true
+		
+	if is_flagged(pos):
+		return
 
 	if is_hidden(pos):
 		reveal_cell(pos)
@@ -102,20 +182,28 @@ func reveal_cell(pos: Vector2i):
 		lose_game()
 		set_tile_cell(%MineLayer, pos, "BLOWN_MINE")
 
+func highlight_unflagged_cells_around(pos: Vector2i):
+	var cells = get_mines_to_flag(pos, false)
+	highlight_cells(cells)
+
 func reveal_unflagged_cells_around(pos: Vector2i):
-	if is_hidden(pos):
-		return
-
-	var area = get_area_around_tile(pos, 1, true)
-	var number_of_mines_here = get_number_of_mines_in_list(area)
-	var number_of_known_mines = get_number_of_flags_and_revealed_mines_in_list(area)
-
-	if number_of_known_mines < number_of_mines_here:
-		return
-
-	var cells = get_unflagged_hidden_cells_in_list(area)
+	var cells = get_mines_to_flag(pos, true)
 	for cell_pos in cells:
 		reveal_cell(cell_pos)
+
+func get_mines_to_flag(pos: Vector2i, validate_numbers: bool) -> Array[Vector2i]:
+	if is_hidden(pos):
+		return []
+
+	var area = get_area_around_tile(pos, 1, true)
+	if validate_numbers:
+		var number_of_mines_here = get_number_of_mines_in_list(area)
+		var number_of_known_mines = get_number_of_flags_and_revealed_mines_in_list(area)
+
+		if number_of_known_mines < number_of_mines_here:
+			return []
+	
+	return get_unflagged_hidden_cells_in_list(area)
 
 func reveal_mines_in_tiles(tiles: Array[Vector2i]):
 	for pos in tiles:
@@ -138,21 +226,31 @@ func unflag_cell(pos: Vector2i):
 	set_tile_cell(%DefaultLayer, pos, "DEFAULT")
 	emit_signal('flag_changed')
 
+func highlight_hidden_cells_around(pos: Vector2i):
+	var cells = get_cells_to_flag_around(pos, false)
+	highlight_cells(cells)
+
 func flag_hidden_cells_around(pos: Vector2i):
-	if is_hidden(pos):
-		return
-
-	var area = get_area_around_tile(pos, 1, true)
-
-	var number_of_mines_here = get_number_of_mines_in_list(area)
-	var number_of_known_mines = get_number_of_flags_and_revealed_mines_in_list(area)
-	var cells = get_unflagged_hidden_cells_in_list(area)
-
-	if number_of_mines_here < number_of_known_mines + cells.size():
-		return
+	var cells = get_cells_to_flag_around(pos, true)
 
 	for cell_pos in cells:
 		flag_cell(cell_pos)
+
+func get_cells_to_flag_around(pos: Vector2i, validate_numbers: bool) -> Array[Vector2i]:
+	if is_hidden(pos):
+		return [pos]
+
+	var area = get_area_around_tile(pos, 1, true)
+	var cells = get_unflagged_hidden_cells_in_list(area)
+
+	if validate_numbers:
+		var number_of_mines_here = get_number_of_mines_in_list(area)
+		var number_of_known_mines = get_number_of_flags_and_revealed_mines_in_list(area)
+
+		if number_of_mines_here < number_of_known_mines + cells.size():
+			return []
+	
+	return cells
 
 func remove_all_flags():
 	var cells = get_all_cells()
@@ -160,16 +258,22 @@ func remove_all_flags():
 		if is_flagged(pos):
 			unflag_cell(pos)
 
+func preview_right_click(pos: Vector2i):
+	if game_lost or game_finished:
+		return
+	
+	if is_flagged(pos):
+		highlight_cells([pos])
+		return
+	
+	highlight_hidden_cells_around(pos)
+
 func right_click(pos: Vector2i):
 	if game_lost or game_finished:
 		return
 
 	if is_flagged(pos):
 		unflag_cell(pos)
-		return
-
-	if is_hidden(pos):
-		flag_cell(pos)
 		return
 
 	flag_hidden_cells_around(pos)
@@ -188,28 +292,30 @@ func clear_board():
 
 	if not %Timer.is_stopped():
 		%Timer.stop()
+		
+	var cells = get_all_cells()
+	for pos in cells:
+		set_tile_cell(%DefaultLayer, pos, "DEFAULT")
 
-	for i in rows:
-		for j in columns:
-			var cell_coord = Vector2i(min_column() + j, min_row() + i)
+func clear_highlights():
+	%HighlightLayer.clear()
 
-			set_tile_cell(%DefaultLayer, cell_coord, "DEFAULT")
+func highlight_cells(cells: Array[Vector2i]):
+	for pos in cells:
+		set_tile_cell(%HighlightLayer, pos, "HIGHLIGHT")
 
 func build_board(safe_pos: Vector2i = Vector2.INF):
 	clear_board()
-
 	place_mines(safe_pos)
 
-	for i in rows:
-		for j in columns:
-			var cell_coord = Vector2i(min_column() + j, min_row() + i)
-
-			if not is_bomb(cell_coord):
-				var qtt = get_number_of_mines_near_tile(cell_coord)
-				if qtt == 0:
-					set_tile_cell(%MineLayer, cell_coord, "CLEAR")
-				else:
-					set_tile_cell(%MineLayer, cell_coord, str(qtt))
+	var cells = get_all_cells()
+	for pos in cells:
+		if not is_bomb(pos):
+			var qtt = get_number_of_mines_near_tile(pos)
+			if qtt == 0:
+				set_tile_cell(%MineLayer, pos, "CLEAR")
+			else:
+				set_tile_cell(%MineLayer, pos, str(qtt))
 
 	if is_valid_pos(safe_pos):
 		started = true

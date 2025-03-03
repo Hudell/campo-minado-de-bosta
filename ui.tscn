@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://etfftboqbdub"]
+[gd_scene load_steps=9 format=3 uid="uid://etfftboqbdub"]
 
 [ext_resource type="Texture2D" uid="uid://bviavsws2uaxu" path="res://assets/button_default.png" id="1_86rhh"]
 [ext_resource type="Script" path="res://ui.gd" id="1_bo8mo"]
@@ -7,16 +7,18 @@
 [ext_resource type="Texture2D" uid="uid://cefhjenmj7yy6" path="res://assets/button_disgusted_pressed.png" id="5_k6qee"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xjy4p"]
-bg_color = Color(0.223529, 0.192157, 0.294118, 1)
+bg_color = Color(0.223529, 0.192157, 0.294118, 0)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ql4e8"]
-bg_color = Color(0.223529, 0.192157, 0.294118, 1)
+bg_color = Color(0.223529, 0.192157, 0.294118, 0)
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_g2lgp"]
 
 [node name="UI" type="CanvasLayer"]
 script = ExtResource("1_bo8mo")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
-custom_minimum_size = Vector2(0, 80)
+custom_minimum_size = Vector2(0, 64)
 anchors_preset = 10
 anchor_right = 1.0
 grow_horizontal = 2
@@ -25,17 +27,21 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_xjy4p")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer"]
 layout_mode = 2
-size_flags_horizontal = 4
+size_flags_horizontal = 0
 size_flags_vertical = 4
 theme_override_constants/separation = 20
 
-[node name="MinesLeft" type="Panel" parent="PanelContainer/HBoxContainer"]
-custom_minimum_size = Vector2(50, 30)
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="MinesLeft" type="Panel" parent="PanelContainer/HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(50, 24)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_ql4e8")
 
-[node name="MinesLabel" type="Label" parent="PanelContainer/HBoxContainer/MinesLeft"]
+[node name="MinesLabel" type="Label" parent="PanelContainer/HBoxContainer/VBoxContainer/MinesLeft"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 8
@@ -43,15 +49,38 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -25.0
-offset_top = -15.0
-offset_right = 25.0
-offset_bottom = 15.0
+offset_left = -2.0
+offset_top = -12.0
+offset_right = 48.0
+offset_bottom = 11.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 text = "100"
-horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Timer" type="Panel" parent="PanelContainer/HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(50, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_ql4e8")
+
+[node name="TimerLabel" type="Label" parent="PanelContainer/HBoxContainer/VBoxContainer/Timer"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -2.0
+offset_top = -12.0
+offset_right = 48.0
+offset_bottom = 11.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+text = "100"
 vertical_alignment = 1
 
 [node name="GameButton" type="TextureButton" parent="PanelContainer/HBoxContainer"]
@@ -71,29 +100,47 @@ size_flags_vertical = 4
 texture_normal = ExtResource("4_ttmdh")
 texture_pressed = ExtResource("5_k6qee")
 
-[node name="Timer" type="Panel" parent="PanelContainer/HBoxContainer"]
-custom_minimum_size = Vector2(50, 30)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_ql4e8")
+[node name="AcceptDialog" type="AcceptDialog" parent="."]
+title = "New Game"
+initial_position = 2
+size = Vector2i(320, 160)
+ok_button_text = "Start"
 
-[node name="TimerLabel" type="Label" parent="PanelContainer/HBoxContainer/Timer"]
+[node name="VBoxContainer" type="GridContainer" parent="AcceptDialog"]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 312.0
+offset_bottom = 111.0
+size_flags_horizontal = 4
+theme_override_constants/h_separation = 55
+columns = 2
+
+[node name="Beginner" type="CheckBox" parent="AcceptDialog/VBoxContainer"]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -25.0
-offset_top = -15.0
-offset_right = 25.0
-offset_bottom = 15.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_color = Color(1, 0, 0, 1)
-text = "100"
-horizontal_alignment = 1
-vertical_alignment = 1
+layout_mode = 2
+button_group = SubResource("ButtonGroup_g2lgp")
+text = "Beginner"
+
+[node name="Easy" type="CheckBox" parent="AcceptDialog/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+button_group = SubResource("ButtonGroup_g2lgp")
+text = "Easy"
+
+[node name="Normal" type="CheckBox" parent="AcceptDialog/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+button_group = SubResource("ButtonGroup_g2lgp")
+text = "Normal"
+
+[node name="Hard" type="CheckBox" parent="AcceptDialog/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+button_group = SubResource("ButtonGroup_g2lgp")
+text = "Hard"
 
 [connection signal="pressed" from="PanelContainer/HBoxContainer/GameButton" to="." method="_on_game_button_pressed"]
 [connection signal="pressed" from="PanelContainer/HBoxContainer/GameLostButton" to="." method="_on_game_button_pressed"]
+[connection signal="canceled" from="AcceptDialog" to="." method="_on_accept_dialog_canceled"]
+[connection signal="confirmed" from="AcceptDialog" to="." method="_on_accept_dialog_confirmed"]
