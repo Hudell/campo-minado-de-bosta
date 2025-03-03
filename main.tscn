@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://bmhhvapbcvp83"]
+[gd_scene load_steps=5 format=3 uid="uid://bmhhvapbcvp83"]
 
 [ext_resource type="PackedScene" uid="uid://dj7641avt48sx" path="res://mines_grid.tscn" id="1_f10nx"]
 [ext_resource type="PackedScene" uid="uid://etfftboqbdub" path="res://ui.tscn" id="2_4h27c"]
+[ext_resource type="PackedScene" uid="uid://bydi0kg83ywoa" path="res://camera.tscn" id="2_h2yge"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hf6cd"]
 bg_color = Color(0.223529, 0.192157, 0.294118, 1)
@@ -12,15 +13,19 @@ bg_color = Color(0.223529, 0.192157, 0.294118, 1)
 
 [node name="Panel" type="Panel" parent="Game"]
 custom_minimum_size = Vector2(1280, 720)
-offset_right = 640.0
-offset_bottom = 360.0
+offset_left = -100.0
+offset_top = -100.0
+offset_right = 1280.0
+offset_bottom = 720.0
+scale = Vector2(3, 3)
 theme_override_styles/panel = SubResource("StyleBoxFlat_hf6cd")
 
 [node name="MinesGrid" parent="Game" instance=ExtResource("1_f10nx")]
-position = Vector2(0, -16)
+unique_name_in_owner = true
 
-[node name="Camera2D" type="Camera2D" parent="Game"]
-anchor_mode = 0
+[node name="Camera2D" parent="Game" node_paths=PackedStringArray("game") instance=ExtResource("2_h2yge")]
+unique_name_in_owner = true
+game = NodePath("../MinesGrid")
 
 [node name="UI" parent="." node_paths=PackedStringArray("game") instance=ExtResource("2_4h27c")]
 game = NodePath("../Game/MinesGrid")

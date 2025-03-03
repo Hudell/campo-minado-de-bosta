@@ -91,10 +91,10 @@ func max_column() -> int:
 	return columns - 1
 
 func min_row() -> int:
-	return 3
+	return 0
 
 func max_row() -> int:
-	return rows + 2
+	return rows - 1
 
 func preview_click_cell(cell: Vector2i, mouse_button: MouseButton):
 	clear_highlights()

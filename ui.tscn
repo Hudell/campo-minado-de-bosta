@@ -1,8 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://etfftboqbdub"]
+[gd_scene load_steps=11 format=3 uid="uid://etfftboqbdub"]
 
 [ext_resource type="Texture2D" uid="uid://bviavsws2uaxu" path="res://assets/button_default.png" id="1_86rhh"]
 [ext_resource type="Script" uid="uid://cjkqg7yflwcit" path="res://ui.gd" id="1_bo8mo"]
+[ext_resource type="Texture2D" uid="uid://d31u2e5hjm1om" path="res://assets/icons/skel.png" id="2_5xfjp"]
 [ext_resource type="Texture2D" uid="uid://bys5qw8rmp22f" path="res://assets/button_default_pressed.png" id="2_fcuxb"]
+[ext_resource type="Texture2D" uid="uid://tnb8i3s1q5cw" path="res://assets/icons/time.png" id="3_yx34i"]
 [ext_resource type="Texture2D" uid="uid://bmgvyvw5lb12q" path="res://assets/button_disgusted.png" id="4_ttmdh"]
 [ext_resource type="Texture2D" uid="uid://cefhjenmj7yy6" path="res://assets/button_disgusted_pressed.png" id="5_k6qee"]
 
@@ -41,6 +43,14 @@ layout_mode = 2
 size_flags_horizontal = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_ql4e8")
 
+[node name="TextureRect" type="TextureRect" parent="PanelContainer/HBoxContainer/VBoxContainer/MinesLeft"]
+layout_mode = 0
+offset_top = 3.0
+offset_right = 40.0
+offset_bottom = 43.0
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_5xfjp")
+
 [node name="MinesLabel" type="Label" parent="PanelContainer/HBoxContainer/VBoxContainer/MinesLeft"]
 unique_name_in_owner = true
 layout_mode = 1
@@ -64,6 +74,14 @@ custom_minimum_size = Vector2(50, 24)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_ql4e8")
+
+[node name="TextureRect" type="TextureRect" parent="PanelContainer/HBoxContainer/VBoxContainer/Timer"]
+layout_mode = 0
+offset_top = 3.0
+offset_right = 40.0
+offset_bottom = 43.0
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_yx34i")
 
 [node name="TimerLabel" type="Label" parent="PanelContainer/HBoxContainer/VBoxContainer/Timer"]
 unique_name_in_owner = true
