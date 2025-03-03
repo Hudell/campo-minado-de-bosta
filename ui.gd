@@ -12,7 +12,6 @@ func _ready() -> void:
 		update_timer()
 		update_button()
 
-
 func get_mines_left() -> int:
 	if game == null:
 		return 0
@@ -44,11 +43,16 @@ func on_game_state_changed():
 	update_mines_left()
 	update_timer()
 	update_button()
+	
+	if game != null and game.game_finished and not game.game_lost:
+		$AcceptDialog.title = "You've won!"
+		$AcceptDialog.popup()
 
 func _on_game_button_pressed() -> void:
 	if game != null:
 		game.paused = true
 		
+		$AcceptDialog.title = "New Game"
 		$AcceptDialog.popup()
 
 func update_mines_left():
@@ -62,7 +66,10 @@ func update_button():
 
 	%GameButton.visible = not lost
 	%GameLostButton.visible = lost
-
+	
+	if game != null and game.game_lost:
+		$AcceptDialog.title = "You've lost!"
+		$AcceptDialog.popup()
 
 func _on_accept_dialog_confirmed() -> void:
 	if game != null:
@@ -85,3 +92,23 @@ func _on_accept_dialog_confirmed() -> void:
 func _on_accept_dialog_canceled() -> void:
 	if game != null:
 		game.paused = false
+
+func prevent_game_input():
+	if game != null:
+		game.is_mouse_blocked = true
+
+func allow_game_input():
+	if game != null:
+		game.is_mouse_blocked = false
+
+func _on_panel_container_gui_input(_event: InputEvent) -> void:
+	prevent_game_input()
+
+func _on_control_gui_input(_event: InputEvent) -> void:
+	allow_game_input()
+
+func _on_game_button_gui_input(_event: InputEvent) -> void:
+	prevent_game_input()
+
+func _on_game_lost_button_gui_input(_event: InputEvent) -> void:
+	prevent_game_input()

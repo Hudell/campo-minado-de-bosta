@@ -9,7 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://cefhjenmj7yy6" path="res://assets/button_disgusted_pressed.png" id="5_k6qee"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xjy4p"]
-bg_color = Color(0.223529, 0.192157, 0.294118, 0)
+bg_color = Color(0.223529, 0.192157, 0.294118, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ql4e8"]
 bg_color = Color(0.223529, 0.192157, 0.294118, 0)
@@ -18,6 +18,14 @@ bg_color = Color(0.223529, 0.192157, 0.294118, 0)
 
 [node name="UI" type="CanvasLayer"]
 script = ExtResource("1_bo8mo")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = -100.0
+offset_top = -100.0
+offset_right = 1380.0
+offset_bottom = 820.0
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 custom_minimum_size = Vector2(0, 64)
@@ -106,6 +114,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
+mouse_default_cursor_shape = 2
 texture_normal = ExtResource("1_86rhh")
 texture_pressed = ExtResource("2_fcuxb")
 
@@ -115,6 +124,7 @@ visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
+mouse_default_cursor_shape = 2
 texture_normal = ExtResource("4_ttmdh")
 texture_pressed = ExtResource("5_k6qee")
 
@@ -158,7 +168,11 @@ layout_mode = 2
 button_group = SubResource("ButtonGroup_g2lgp")
 text = "Hard"
 
+[connection signal="gui_input" from="Control" to="." method="_on_control_gui_input"]
+[connection signal="gui_input" from="PanelContainer" to="." method="_on_panel_container_gui_input"]
+[connection signal="gui_input" from="PanelContainer/HBoxContainer/GameButton" to="." method="_on_game_button_gui_input"]
 [connection signal="pressed" from="PanelContainer/HBoxContainer/GameButton" to="." method="_on_game_button_pressed"]
+[connection signal="gui_input" from="PanelContainer/HBoxContainer/GameLostButton" to="." method="_on_game_lost_button_gui_input"]
 [connection signal="pressed" from="PanelContainer/HBoxContainer/GameLostButton" to="." method="_on_game_button_pressed"]
 [connection signal="canceled" from="AcceptDialog" to="." method="_on_accept_dialog_canceled"]
 [connection signal="confirmed" from="AcceptDialog" to="." method="_on_accept_dialog_confirmed"]

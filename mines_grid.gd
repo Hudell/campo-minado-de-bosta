@@ -35,12 +35,13 @@ var clicked_cell: Vector2i
 var is_clicked := false
 var clicked_mouse_button: MouseButton
 var paused = false
+var is_mouse_blocked = false
 
 func _ready() -> void:
 	clear_board()
 
 func _input(event: InputEvent) -> void:
-	if paused:
+	if paused or is_mouse_blocked:
 		clear_click_data()
 		return
 
