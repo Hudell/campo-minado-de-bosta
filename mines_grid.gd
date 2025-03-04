@@ -67,8 +67,10 @@ func mouse_click_event(event: InputEventMouseButton, cell: Vector2i):
 	click_cell(cell, event.button_index)
 	clear_click_data()
 
-func mouse_move_event(_event: InputEventMouseMotion, cell: Vector2i):
+func mouse_move_event(event: InputEventMouseMotion, cell: Vector2i):
 	if not is_clicked:
+		return
+	if event.relative.is_zero_approx():
 		return
 	if clicked_cell == null or not is_valid_pos(clicked_cell):
 		return
