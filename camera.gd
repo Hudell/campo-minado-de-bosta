@@ -45,7 +45,7 @@ func _process(delta: float) -> void:
 	if direction == Vector2.ZERO:
 		return
 	
-	var position_delta = direction * delta * speed
+	var position_delta = direction * delta * speed * zoom.x
 	var new_position = normalize_position(position + position_delta)
 	
 	if position != new_position:
